@@ -2,13 +2,16 @@
 ![Logo](/docs/menulogo.png)
 # Description: 
 Home Page (route /):
+
 1.1. Registration Form. Fields - name, email, password, date of birth, gender, profile photo;
 1.2. Authorization Form;
 
 Profile (route /account):
+
 2.1. Form for editing fields - name, password, profile photo;
 
 Accounts (route /people):
+
 3.1. Display of user cards of other users;
 Upon entering this page, a list of all users except the current one is displayed.
 3.2. Account card consists of:
