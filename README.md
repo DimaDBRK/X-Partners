@@ -1,5 +1,5 @@
 # X-Partners
-![Logo](/docs/menulogo.png)
+![Logo](/docs/screens/XPlogo.png)
 # Description: 
 Home Page (route /):
 
@@ -26,11 +26,11 @@ The application allows viewing and editing the restaurant menu through a web int
 
 - Frontend: React + Axios
 - Backend: Node.js + MongoDB + Prisma
-- Authentication System: JWT-based
+- Authentication System: basic, JWT-based
 
 Demo video: TBC
 
-![Menu](/docs/menuScreen.png)
+![Accounts](/docs/screens/accounts.jpg)
 ## Table of Contents
 
 - [X-Partners](#x-partners)
@@ -45,48 +45,26 @@ Demo video: TBC
 
 ## Database
 
-Prisma automates every part of setup and running of PostgreSQL clusters.
+Prisma automates every part of setup and running of MongoDB clusters.
 For details check backend - prisma - schema.prisma
 There are Tables:
 
-
-model Item {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(255) @unique
-  description String?  @db.VarChar(1000)
-  price       Float
-  category    Category? @relation(fields: [categoryId], references: [id])
-  categoryId  Int? 
-  author      User     @relation(fields: [authorId], references: [id])
-  authorId    String
-  pictureUrl  String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt @db.Timestamptz(6)
-}
-
-model Category {
-  id    Int     @id @default(autoincrement())
-  title String  @unique
-  items Item[]
-}
-
 model User {
-  id        String    @id @default(cuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String    @unique
   name      String?
   password  String
-  createdAt DateTime  @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime @updatedAt @db.Timestamptz(6)
-  items     Item[]
+  gender    String
+  birthDate DateTime
+  photoUrl  String
   tokens    Token[]
 }
 
 model Token {
-  id        String    @id @default(cuid())
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   token     String    @unique
-  userId    String
+  userId    String    @db.ObjectId
   user      User      @relation(fields: [userId], references: [id])
-  createdAt DateTime  @default(now()) @db.Timestamptz(6)
 }
 
 ## Backend and API
@@ -99,36 +77,26 @@ User
 * POST /api/users/register
 * GET /api/users/all
 * GET /api/users/logout
+* POST /api/users/update_photo/{ID}
+* PATCH /api/users/update/{ID}
+* DELETE /api/users/delete_picture/{ID}
 
-Item
-* GET /api/menu/items/all
-* POST /api/menu/items/create
-* PUT /api/menu/items/update/{ID}
-* DELETE /api/menu/items/delete/{ID}
-* POST /api/menu/items/update_picture/{ID}
-* DELETE /api/menu/items/delete_picture/{ID}
-
-Category
-* GET /api/menu/categories/all
-* POST api/menu/categories/create
-* PUT /api/menu/categories/update/{ID}
-* DELETE /api/menu/categories/delete/{ID}
 
 ## Frontend
 Pages and main components.
-![Manager](/docs/manager.jpg)
+![Profile](/docs/screens/profile.jpg)
 Main components:
-* Homepage - info
-* Menu - to show Menu Items card by Category
-* Manager - edit, create and delete Categories and Items, update Pictures
+* Homepage - Login and Register
+* Accounts - to show Users cards 
+* Profile - edit name, password, update Picture (Photo)
+![Register](/docs/screens/register.jpg)
 
 
 Nav bar:
-* Logo "M" with link to Home page
-* Menu and Manager (if User Login) buttons
+* Logo "XP" with link to Home page
+* Accounts (if User Login) buttons
 * Switch themes button
-* Login button
-* User Name and Role info
+* User Photo, Name 
 * Log out and Profile in additional menu
 
 ## Authentication
