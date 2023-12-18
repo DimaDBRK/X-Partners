@@ -28,7 +28,6 @@ The application allows viewing and editing the restaurant menu through a web int
 - Backend: Node.js + MongoDB + Prisma
 - Authentication System: basic, JWT-based
 
-Demo video: TBC
 
 ![Accounts](/docs/screens/accounts.jpg)
 ## Table of Contents
@@ -84,13 +83,11 @@ User
 
 ## Frontend
 Pages and main components.
-![Profile](/docs/screens/profile.jpg)
+![Register](/docs/screens/register.jpg)
 Main components:
 * Homepage - Login and Register
 * Accounts - to show Users cards 
 * Profile - edit name, password, update Picture (Photo)
-![Register](/docs/screens/register.jpg)
-
 
 Nav bar:
 * Logo "XP" with link to Home page
@@ -98,6 +95,7 @@ Nav bar:
 * Switch themes button
 * User Photo, Name 
 * Log out and Profile in additional menu
+![Profile](/docs/screens/profile.jpg)
 
 ## Authentication
 
@@ -106,8 +104,8 @@ Simple token-based authentication employs one token, which stored in LocalStorag
 ## Installation
 1. .env file for server includes:
 - PORT=3030 => by server side, could be modify (don't forget to change proxy settings on frontend)
-- DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@CONNECTION/NAME"
-  example: postgresql://username:password@localhost:5432/mydatabase 
+- DATABASE_URL=
+  example: "mongodb+srv://<name>:<params>.mongodb.net/<DB>"
 - ACCESS_TOKEN_SECRET=...
 - ACCESS_TOKEN_EXPIRES_IN=86400 #24h
 
