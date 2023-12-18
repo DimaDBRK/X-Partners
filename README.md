@@ -105,7 +105,7 @@ Simple token-based authentication employs one token, which stored in LocalStorag
 1. .env file for server includes:
 - PORT=3030 => by server side, could be modify (don't forget to change proxy settings on frontend)
 - DATABASE_URL=
-  example: "mongodb+srv://<name>:<params>.mongodb.net/<DB>"
+  example: " mongodb+srv://"name":"password.params".mongodb.net/"DB" "
 - ACCESS_TOKEN_SECRET=...
 - ACCESS_TOKEN_EXPIRES_IN=86400 #24h
 
