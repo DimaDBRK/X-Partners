@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Inter:wght@400;600;700&family=Space+Mono&display=swap');
+
+html,
+body,
+#root,
+.app{
+    height: 100%;
+    width: 100%;
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+}

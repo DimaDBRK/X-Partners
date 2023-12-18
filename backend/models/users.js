@@ -5,15 +5,22 @@ export const register = async (
   {
     name,
     email,
-    hashPassword 
+    hashPassword,
+    gender,
+    birthDate,
+    photoUrl
   }) => {
-  // ... your Prisma Client queries will go here
+  // Prisma Client queries 
   try {
     const newUser = await prisma.user.create({
       data: {
-        name,
         email,
-        password: hashPassword
+        name,
+        password: hashPassword,
+        gender,
+        birthDate,
+        photoUrl
+
       }
     })
     console.log(newUser)
@@ -31,7 +38,8 @@ export const getAllUsers = async (prisma) => {
       select: {
         id: true,
         name: true,
-        email: true,
+        birthDate: true,
+        photoUrl: true,
       }
     })
     return allUsers
@@ -93,5 +101,44 @@ export const deleteToken =  async (prisma, tokenValue) => {
     } else {
       console.error('Error deleting token:', e);
     }
+  }
+}
+
+// updatePictureUrl
+
+export const updatePictureUrl = async (prisma, id, pictureUrl) => {
+  try {
+    const updatedItem = await prisma.user.update({
+      where: { id }, 
+      data: { 
+        photoUrl : pictureUrl,
+      }
+    })
+    
+    return updatedItem; 
+
+  } catch (e) {
+    console.error('Error updating User info in table User:', e);
+    throw e;
+  }
+}
+
+
+
+// update Item
+export const updateItem = async (prisma, id, type, value) => {
+  try {
+    const updatedItem = await prisma.user.update({
+      where: { id }, 
+      data: { 
+        [type]: value,
+      }
+    })
+    
+  return updatedItem; 
+
+  } catch (e) {
+    console.error('Error updating User info in table User:', e);
+    throw e;
   }
 }
