@@ -3,8 +3,6 @@ import { AppContext } from "App";
 import { Alert, Grid, Link, Avatar, TextField, Box, MenuItem, InputLabel, Select, FormControl, FormControlLabel, Checkbox, Button, Typography, useTheme, FormHelperText } from "@mui/material";
 import Header from "components/Header";
 import ItemsGrid from 'components/ItemsGrid';
-// import UsersGrid from "components/UsersGrid";
-// import Auth from "auth/Auth";
 import Container from '@mui/material/Container';
 import jwt_token from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +18,7 @@ const Profile = (props) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [isUpdateButtonActive, setIsUpdateButtonActive] = useState(true);
-  
+  const [isPasswordUpdateButtonActive, setIsPasswordUpdateButtonActive] = useState(true);
   // file
   const [uploadFileUrl, setUploadFileUrl] = useState("");
   const [uploadFileName, setUploadFileName] = useState(undefined);
@@ -60,20 +58,42 @@ const Profile = (props) => {
   }
 
   const handleChangePassword = (event) => {
+    setMsg("");
     setPassword(event.target.value);
-    // setIsUpdateButtonActive(checkUpdateInput(name, event.target.value));
+    setIsPasswordUpdateButtonActive(checkUpdateInput(event.target.value));
   }
 
   // requests
   // Update Name
   const updateName = async (id) => {
-    console.log("Button Update Name =>");
     setMsg("");
     // -> 
     try {
       const res = await axios.patch(`api/users/update/${id}`, 
         {
           "name": name,
+        }
+        );
+      if (res.status === 200 || res.status === 201) {
+        setMsg(res.data.msg);
+        // store token to local storage
+        localStorage.setItem('MmToken', res.data.token);
+        setToken(res.data.token);
+      }
+    } catch (err) {
+      console.log(err);
+      setMsg(err.response.data.msg || err.response.statusText); // to show in the same part
+    }
+  }
+
+  // Update Password
+  const updatePassword = async (id) => {
+    setMsg("");
+    // -> 
+    try {
+      const res = await axios.patch(`api/users/update/${id}`, 
+        {
+          "password": password,
         }
         );
       if (res.status === 200 || res.status === 201) {
@@ -113,51 +133,47 @@ const Profile = (props) => {
 
       if (res.status === 200 || res.status === 201) {
         setMsg(res.data.msg);
-        // setSelectedItem(getSelectedItemInfoById(res.data.items, [id]));
         // prevent picture caching
         setCacheBustingTimestamp(new Date().getTime());
         // store token to local storage
         localStorage.setItem('MmToken', res.data.token);
         setToken(res.data.token);
-        // set new url
-        // setSelectedItem(getSelectedItemInfoById(res.data.items, [id]));
-        // setSelectedItem({
-        //   ...selectedItem, pictureUrl: `${selectedItem.pictureUrl}?t=${cacheBustingTimestamp}`
-        // });
         // ClearUpdatedFile
         clearFileUpload();
 
       }
     } catch (err) {
       console.log(err);
-      setMsg(err.response.data.msg); // to show in the same part
+      setMsg(err.response.data.msg || err.response.statusText); // to show in the same part
     }
   }
    
   
   
-  // Picture Item delete
+  // Picture delete
   const itemPictureDelete = async (id) => {
-    console.log("Button delete Item Picture=>", id)
     setMsg("");
-    // if (!id) {
-    //   setMsg("No Item ID for Picture delete found.");
-    //   return;
-    // }
-    // // // -> delete
-    // try {
-    //   const res = await axios.delete(`/api/menu/items/delete_picture/${id}`);
-    //   if (res.status === 200 || res.status === 201) {
-    //     setMsg(res.data.msg);
-      
-    //     setSelectedItem(getSelectedItemInfoById(res.data.items, [id]));
-    //     setItems(res.data.items);
-    //     clearFileUpload();
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    //   setMsg(err.response.data.msg); // to show in the same part
-    // }
+    if (!id) {
+      setMsg("No User ID for Picture delete found.");
+      return;
+    }
+    // // -> delete
+    try {
+      const res = await axios.delete(`api/users/delete_picture/${id}`);
+      if (res.status === 200 || res.status === 201) {
+        setMsg(res.data.msg);
+        // prevent picture caching
+        setCacheBustingTimestamp(new Date().getTime());
+        // store token to local storage
+        localStorage.setItem('MmToken', res.data.token);
+        setToken(res.data.token);
+        // ClearUpdatedFile
+        clearFileUpload();
+      }
+    } catch (err) {
+      console.log(err);
+      setMsg(err.response.data.msg || err.response.statusText); // to show in the same part
+    }
   }
 
   const clearFileUpload = () => {
@@ -217,7 +233,7 @@ const Profile = (props) => {
           </Avatar>
         </Box>
 
-        {/* Items ItemsGrid table */}
+        {/* User Name */}
         <Box sx={{ mt: 1 }}>
           <Grid container spacing={2}>
             {/* name */}
@@ -250,14 +266,20 @@ const Profile = (props) => {
                 </Button>
               </Grid>
 
-              {/* password */}
-             {/* <Grid item xs={12}>
+          </Grid>
+        </Box>
+
+        {/* Password */}
+        <Box sx={{ mt: 2 }}>
+          <Grid container spacing={2}>
+            {/* password */}
+            <Grid item xs={3}>
               <TextField
-                // disabled={false}
+                disabled={false}
                 size="small"
                 // fullWidth
-                id="new-password"
-                label="Password"
+                id="user-password"
+                label="New password"
                 name="password"
                 autoComplete="password"
                 maxRows={1}
@@ -265,7 +287,20 @@ const Profile = (props) => {
                 onChange ={ handleChangePassword } // 
                 // onBlur={()=>{}}
               />
-            </Grid> */}
+            </Grid>
+             
+            <Grid item xs={3}>
+                <Button
+                  sx={{ mt: 0 }}
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  disabled={isPasswordUpdateButtonActive}
+                  onClick={() => updatePassword(userinfo.id)}
+                >
+                  Update
+                </Button>
+              </Grid>
           </Grid>
         </Box>
 
@@ -288,7 +323,7 @@ const Profile = (props) => {
                  {/* Current picture */}
                 <Avatar
                   alt=""
-                  src= { (userinfo.photoUrl && userinfo?.photoUrl === "") ? "/images/avatar.jpg" : `${userinfo.photoUrl}?t=${cacheBustingTimestamp}` }
+                  src= { (userinfo?.photoUrl === "") ? "/images/avatar.jpg" : `${userinfo.photoUrl}?t=${cacheBustingTimestamp}` }
                   sx={{ width: 100, height: 100 }}
                 />
                 <Button

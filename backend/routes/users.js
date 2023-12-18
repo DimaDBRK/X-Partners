@@ -5,7 +5,8 @@ import {
   _login,
   _logout,
   _updateUserPhoto,
-  _updateUser
+  _updateUser,
+  _deleteItemPicture
 } from '../controllers/users.js';
 
 // it is traffic controller
@@ -17,5 +18,5 @@ u_router.post('/login', _login);
 u_router.get('/logout', _logout);
 u_router.post('/update_photo/:id', _updateUserPhoto);
 u_router.patch('/update/:id', _updateUser);
-
+u_router.delete('/delete_picture/:id', _deleteItemPicture);
 export default u_router;

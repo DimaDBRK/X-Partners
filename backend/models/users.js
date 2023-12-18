@@ -1,3 +1,4 @@
+import { promises as fsPromises } from 'fs';
 
 // register new user
 export const register = async (
@@ -135,10 +136,44 @@ export const updateItem = async (prisma, id, type, value) => {
       }
     })
     
-  return updatedItem; 
+    return updatedItem; 
 
   } catch (e) {
     console.error('Error updating User info in table User:', e);
+    throw e;
+  }
+}
+
+
+// delete Item Picture
+export const deleteItemPicture = async (prisma, id) => {
+  try {
+    // Fetch  item's  pictureUrl
+    const user = await prisma.user.findUnique({
+      where: { id: id },
+      select: { photoUrl: true } 
+    });
+
+    if (!user || !user.photoUrl) {
+      throw new Error('No user found or pictureUrl is not set.');
+    }
+
+    // picture URL
+    const picturePath = `public${user.photoUrl}`;
+   
+    // Check if the file exists and delete it
+    await fsPromises.unlink(picturePath);
+
+    // Remove the pictureUrl from the the database
+    const updatedItem = await prisma.user.update({
+      where: { id },
+      data: { photoUrl: "" },
+    });
+
+    return updatedItem; 
+
+  } catch (e) {
+    console.error('Error during delete Picture file.');
     throw e;
   }
 }

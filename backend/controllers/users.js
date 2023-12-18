@@ -5,7 +5,8 @@ import {
   addToken,
   deleteToken,
   updatePictureUrl,
-  updateItem
+  updateItem,
+  deleteItemPicture
    } from "../models/users.js";
 
 import { PrismaClient } from '@prisma/client'
@@ -237,7 +238,12 @@ export const _updateUser = (req, res) => {
     value = req.body.name;
     type = "name";
   } else if (req.body.hasOwnProperty('password')) {
-    value  = req.body.password;
+    // encrypt the password
+    const password  = req.body.password;
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password + "", salt);
+    
+    value  = hash;
     type = "password";
   }
  
@@ -254,7 +260,7 @@ export const _updateUser = (req, res) => {
       if (!data)
         return res.status(404).json({ msg: "User not found" });
 
-      // success login
+      // success 
       const secret = process.env.ACCESS_TOKEN_SECRET;
       // token life time
       const acsessTokenExpiresIn = process.env.ACCESS_TOKEN_EXPIRES_IN;
@@ -276,6 +282,43 @@ export const _updateUser = (req, res) => {
     }
     if (e.code === 'P2025') { // Prisma's unique constraint error
       return res.status(409).json({ msg: "An Item with this id don't exists." });
+    }
+    res.status(500).json({ msg: "Internal server error." }); // or e.message
+  })
+  .finally(async () => await prisma.$disconnect())
+}
+
+
+export const _deleteItemPicture = (req, res) => {
+  
+  const id = req.params.id; // string 
+  if (!id) {
+    return res.status(400).json({msg: "Wrong request, no id or other params."});
+  }
+  
+  deleteItemPicture(prisma, id) 
+  .then(data => {
+    // response with category info
+    // success login
+    const secret = process.env.ACCESS_TOKEN_SECRET;
+    // token life time
+    const acsessTokenExpiresIn = process.env.ACCESS_TOKEN_EXPIRES_IN;
+    const acsessToken = jwt.sign({ id: data["id"], name: data["name"], email: data["email"], photoUrl: data["photoUrl"] }, secret,{
+      expiresIn:`${acsessTokenExpiresIn}s`,
+    });
+
+      // Store in DB table users tokens (id user_id )
+    addToken(prisma, acsessToken, data["id"]  )
+    res.json({ msg: `Picture for User ID ${id} deleted!`, token: acsessToken })
+  })
+  .catch(e => {
+    console.log(e);
+    // handle specific errors differently
+    if (e.code === 'P2025') { // Prisma's unique constraint error
+      return res.status(409).json({ msg: "An User Picture with this id don't exists." });
+    }
+    if (e.code === 'ENOENT') { //No file or directory
+      return res.status(409).json({ msg: "Picture file not found." });
     }
     res.status(500).json({ msg: "Internal server error." }); // or e.message
   })

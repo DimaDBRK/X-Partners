@@ -119,7 +119,7 @@ const Navbar = ({
                         <Box
                             component="img"
                             alt="profile"
-                            src={ (userinfo.photoUrl && userinfo?.photoUrl === "") ? "/images/avatar.jpg" : `${userinfo.photoUrl}?t=${cacheBustingTimestamp}` }
+                            src={ (userinfo?.photoUrl === "") ? "/images/avatar.jpg" : `${userinfo.photoUrl}?t=${cacheBustingTimestamp}` }
                             height="32px"
                             width="32px"
                             borderRadius="50%"
