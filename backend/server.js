@@ -5,7 +5,6 @@ import path from "path";
 import { fileURLToPath } from 'url';
 
 import u_router from "./routes/users.js";
-import m_router from "./routes/menu.js";
 
 dotenv.config();
 const app = express();
@@ -15,7 +14,6 @@ app.use(express.json());
 
 app.use(cors());
 app.use('/api/users', u_router);
-app.use('/api/menu', m_router);
 
 // Function to serve all static files inside public directory
 const __filename = fileURLToPath(import.meta.url);

@@ -1,7 +1,6 @@
 
 import {useContext, useEffect} from 'react';
 //MUI
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';

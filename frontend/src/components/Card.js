@@ -89,7 +89,7 @@ const ItemCard = (props) => {
                   textAlign: "left",
               }}
           >
-          {(item.birthDate && getAge(item.birthDate) > 7)? getAge(item.birthDate): "No age info"}
+          {(item.birthDate && getAge(item.birthDate) > 7)? `Age: ${getAge(item.birthDate)}`: "No age info"}
         </Typography>
         
       </CardContent>

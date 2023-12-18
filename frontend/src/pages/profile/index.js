@@ -1,14 +1,10 @@
 import { useContext, useEffect, useState }  from "react";
 import { AppContext } from "App";
-import { Alert, Grid, Link, Avatar, TextField, Box, MenuItem, InputLabel, Select, FormControl, FormControlLabel, Checkbox, Button, Typography, useTheme, FormHelperText } from "@mui/material";
+import { Alert, Grid, Avatar, TextField, Box, Button, Typography, useTheme } from "@mui/material";
 import Header from "components/Header";
-import ItemsGrid from 'components/ItemsGrid';
-import Container from '@mui/material/Container';
-import jwt_token from 'jwt-decode';
+
 import { useNavigate } from 'react-router-dom';
-import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
-import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import axios from "axios";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 const Profile = (props) => {
